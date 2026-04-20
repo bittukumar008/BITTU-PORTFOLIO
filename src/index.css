@@ -17,6 +17,17 @@
   html {
     scroll-behavior: smooth;
   }
+  
+  html[data-theme="dark"] body {
+    @apply bg-space-950 text-gray-200 overflow-x-hidden;
+    font-family: var(--font-sans);
+  }
+  
+  html[data-theme="light"] body {
+    @apply bg-gradient-to-b from-gray-50 to-white text-gray-900 overflow-x-hidden;
+    font-family: var(--font-sans);
+  }
+  
   body {
     @apply bg-space-950 text-gray-200 overflow-x-hidden;
     font-family: var(--font-sans);
@@ -24,12 +35,52 @@
 }
 
 @layer utilities {
+  /* Dark Mode Glass */
+  html[data-theme="dark"] .glass {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  }
+  
+  html[data-theme="dark"] .glass-card {
+    @apply backdrop-blur-2xl bg-white/5 border border-white/20 shadow-2xl;
+  }
+
+  /* Light Mode Glass */
+  html[data-theme="light"] .glass {
+    @apply backdrop-blur-xl bg-white/40 border border-white/50 shadow-lg;
+  }
+  
+  html[data-theme="light"] .glass-card {
+    @apply backdrop-blur-2xl bg-white/30 border border-gray-200/40 shadow-xl;
+  }
+
+  /* Default (Dark) */
   .glass {
     @apply backdrop-blur-xl bg-white/5 border border-white/10;
   }
   
   .glass-card {
     @apply backdrop-blur-2xl bg-white/5 border border-white/20 shadow-2xl;
+  }
+
+  /* Light Mode Text Colors */
+  html[data-theme="light"] .text-white {
+    @apply text-gray-900;
+  }
+  
+  html[data-theme="light"] .text-gray-200 {
+    @apply text-gray-900;
+  }
+  
+  html[data-theme="light"] .text-gray-400 {
+    @apply text-gray-600;
+  }
+  
+  html[data-theme="light"] .text-gray-500 {
+    @apply text-gray-500;
+  }
+  
+  html[data-theme="light"] .text-gray-50 {
+    @apply text-gray-900;
   }
 
   .neon-glow-primary {
@@ -50,6 +101,48 @@
 .bg-atmosphere-purple { @apply absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] pointer-events-none; }
 .bg-atmosphere-blue { @apply absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none; }
 .bg-atmosphere-pink { @apply absolute top-[30%] left-[40%] w-[300px] h-[300px] bg-pink-600/10 rounded-full blur-[80px] pointer-events-none; }
+
+/* Light Mode - Border & Text Adjustments */
+html[data-theme="light"] {
+  --tw-border-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-border-opacity));
+}
+
+html[data-theme="light"] .border-white\/10 {
+  @apply border-gray-300/50;
+}
+
+html[data-theme="light"] .border-white\/20 {
+  @apply border-gray-300/60;
+}
+
+html[data-theme="light"] .border-white\/5 {
+  @apply border-gray-300/30;
+}
+
+html[data-theme="light"] .bg-white\/5 {
+  @apply bg-gray-100/40;
+}
+
+html[data-theme="light"] .bg-white\/10 {
+  @apply bg-gray-100/60;
+}
+
+html[data-theme="light"] .text-purple-400 {
+  @apply text-purple-600;
+}
+
+html[data-theme="light"] .text-purple-300 {
+  @apply text-purple-700;
+}
+
+html[data-theme="light"] .text-blue-300 {
+  @apply text-blue-700;
+}
+
+html[data-theme="light"] .hover\:text-purple-400:hover {
+  @apply text-purple-600;
+}
 
 .animate-spin-slow {
   animation: spin 8s linear infinite;

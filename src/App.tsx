@@ -4,33 +4,62 @@
  */
 
 import { motion, AnimatePresence } from "motion/react";
-import { Github, Linkedin, Instagram, Twitter, ExternalLink, Mail, ArrowRight } from "lucide-react";
+import { Github, Linkedin, Instagram, Twitter, ExternalLink, Mail, ArrowRight, Sun, Moon } from "lucide-react";
 import { useState, useEffect, ReactNode } from "react";
 
-const Navbar = () => {
+const Navbar = ({ isDark, setIsDark }: { isDark: boolean; setIsDark: (value: boolean) => void }) => {
   return (
     <motion.nav 
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl h-14 backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl flex items-center justify-between px-8 z-50"
+      className={`fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl h-14 backdrop-blur-xl ${
+        isDark ? "bg-white/5 border border-white/10" : "bg-white/20 border border-white/30"
+      } rounded-2xl flex items-center justify-between px-8 z-50 transition-all`}
     >
       <div className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">BK.</div>
-      <div className="flex gap-8 text-sm font-medium tracking-wide">
-        <a href="#home" className="text-white hover:text-purple-400 transition-colors">Home</a>
-        <a href="#about" className="text-gray-400 hover:text-purple-400 transition-colors">About</a>
-        <a href="#work" className="text-gray-400 hover:text-purple-400 transition-colors">Work</a>
-        <a href="mailto:bittugupta3646@gmail.com" className="text-gray-400 hover:text-purple-400 transition-colors">Hire Me</a>
+      <div className="flex gap-8 text-sm font-medium tracking-wide items-center">
+        <a href="#home" className={`${isDark ? "text-white" : "text-gray-700"} hover:text-purple-400 transition-colors`}>Home</a>
+        <a href="#about" className={`${isDark ? "text-gray-400" : "text-gray-600"} hover:text-purple-400 transition-colors`}>About</a>
+        <a href="#work" className={`${isDark ? "text-gray-400" : "text-gray-600"} hover:text-purple-400 transition-colors`}>Work</a>
+        <a href="mailto:bittugupta3646@gmail.com" className={`${isDark ? "text-gray-400" : "text-gray-600"} hover:text-purple-400 transition-colors`}>Hire Me</a>
+        
+        {/* Dark/Light Toggle Button */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsDark(!isDark)}
+          className={`p-2 rounded-lg ${
+            isDark ? "bg-purple-500/20 border border-purple-500/30" : "bg-purple-500/30 border border-purple-500/50"
+          } hover:bg-purple-500/40 transition-all ml-2`}
+          aria-label="Toggle theme"
+        >
+          {isDark ? (
+            <Moon className="w-5 h-5 text-purple-300" />
+          ) : (
+            <Sun className="w-5 h-5 text-purple-400" />
+          )}
+        </motion.button>
       </div>
     </motion.nav>
   );
 };
 
-const FloatingShapes = () => {
+const FloatingShapes = ({ isDark }: { isDark: boolean }) => {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-      <div className="bg-atmosphere-purple" />
-      <div className="bg-atmosphere-blue" />
-      <div className="bg-atmosphere-pink" />
+      {isDark ? (
+        <>
+          <div className="bg-atmosphere-purple" />
+          <div className="bg-atmosphere-blue" />
+          <div className="bg-atmosphere-pink" />
+        </>
+      ) : (
+        <>
+          <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-purple-300/10 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-blue-300/10 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute top-[30%] left-[40%] w-[300px] h-[300px] bg-pink-300/5 rounded-full blur-[80px] pointer-events-none" />
+        </>
+      )}
       
       {/* Decorative Grains */}
       <div className="absolute inset-0 noise-overlay opacity-20 mix-blend-soft-light" />
@@ -159,10 +188,22 @@ const ProjectCard = ({ title, description, tags }: { title: string, description:
 
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
     setIsLoaded(true);
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      setIsDark(false);
+    }
   }, []);
+
+  useEffect(() => {
+    // Save theme preference and apply to document
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  }, [isDark]);
 
   const projects = [
     {
@@ -192,9 +233,11 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-space-950 relative selection:bg-purple-500/30 font-sans">
-      <FloatingShapes />
-      <Navbar />
+    <div className={`min-h-screen ${
+      isDark ? "bg-space-950 text-gray-200" : "bg-gradient-to-b from-gray-50 to-white text-gray-900"
+    } relative selection:bg-purple-500/30 font-sans transition-colors duration-300`} data-theme={isDark ? "dark" : "light"}>
+      <FloatingShapes isDark={isDark} />
+      <Navbar isDark={isDark} setIsDark={setIsDark} />
 
       {/* Hero Section */}
       <section id="home" className="min-h-screen container mx-auto px-6 md:px-20 relative flex items-center pt-24 z-10">
